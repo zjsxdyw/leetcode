@@ -3,6 +3,7 @@
  * @param {number} target
  * @return {number[]}
  */
+//Runtime beats 97.05% of javascript submissions.
 var twoSum = function(nums, target) {
     var map = {},
         index;
@@ -16,6 +17,3 @@ var twoSum = function(nums, target) {
         }
     }
 };
-/*
-Runtime beats 97.05% of javascript submissions.
-*/
