@@ -16,3 +16,6 @@ var twoSum = function(nums, target) {
         }
     }
 };
+/*
+Runtime beats 97.05% of javascript submissions.
+*/
