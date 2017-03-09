@@ -4,8 +4,7 @@
  */
 //Runtime beats 95.31% of javascript submissions.
 var minPathSum = function(grid) {
-    let m = grid.length,
-        n = grid[0].length;
+    let m = grid.length, n = grid[0].length;
     const dp = [[grid[0][0]]];
     for(let j = 1; j < n; j++) {
         dp[0][j] = dp[0][j-1] + grid[0][j];
