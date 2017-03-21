@@ -9,7 +9,7 @@
  * @param {ListNode} head
  * @return {ListNode}
  */
-//Runtime beats 62.07% of javascript submissions.
+//Runtime beats 81.03% of javascript submissions.
 var deleteDuplicates = function(head) {
     if(!head) return head;
     let p = {next: head},
