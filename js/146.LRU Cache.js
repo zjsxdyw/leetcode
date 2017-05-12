@@ -1,53 +1,71 @@
 /**
- * @constructor
+ * @param {number} capacity
  */
-//Runtime beats 32.20 % of javascript submissions.
+//Runtime beats 76.67 % of javascript submissions.
 var LRUCache = function(capacity) {
-    this.keyArray = [];
     this.len = capacity;
-    this.repository = new Object({});
+    this.count = 0;
+    this.first = null;
+    this.last = null;
+    this.map = {};
 };
 
-/**
+/** 
  * @param {number} key
- * @returns {number}
+ * @return {number}
  */
 LRUCache.prototype.get = function(key) {
-    // for(var i =0; i < this.keyArray.length; i++){
-    //     if(key === this.keyArray[i]) break;
-    // }
-    // if(i < this.keyArray.length) {
-    //     return this.repository[i];
-    // }
-    var index = this.keyArray.indexOf(key);
-    if(index > -1) {
-        this.keyArray.splice(index, 1);
-        this.keyArray.push(key);
-        return this.repository[key];
+    if(this.map[key]) {
+        this.setFirst(this.map[key]);
+        return this.map[key].value;
     }
     return -1;
 };
 
-/**
- * @param {number} key
+/** 
+ * @param {number} key 
  * @param {number} value
- * @returns {void}
+ * @return {void}
  */
-LRUCache.prototype.set = function(key, value) {
-    var index = this.keyArray.indexOf(key);
-    if(index > -1) {
-        this.keyArray.splice(index, 1);
-        this.keyArray.push(key);
-        this.repository[key] = value;
+LRUCache.prototype.put = function(key, value) {
+    let now;
+    if(this.map[key]) {
+        this.map[key].value = value;
+        this.setFirst(this.map[key]);
     } else {
-        if(this.keyArray.length === this.len){
-            var itemDelete = this.keyArray.shift();
-            delete this.repository[itemDelete];
-            this.keyArray.push(key);
-            this.repository[key] = value;
-        } else {
-                this.keyArray.push(key);
-                this.repository[key] = value;
+        now = {key: key, value: value, next: this.first, pre: null};
+        if(this.first) this.first.pre = now;
+        else this.last = now;
+        this.first = now;
+        this.map[key] = now;
+        this.count++;
+        if(this.count > this.len) {
+            delete this.map[this.last.key];
+            this.count--;
+            if(this.last && this.last.pre) this.last = this.last.pre;
+            if(this.len === 1) this.last = now;
+            this.last.next = null;
         }
     }
 };
+LRUCache.prototype.setFirst = function(now) {
+    if(now === this.first) return;
+    if(now.next && now.pre) {
+        now.pre.next = now.next;
+        now.next.pre = now.pre;
+    }
+    this.first.pre = now;
+    now.next = this.first;
+    this.first = now;
+    if(this.last === now && now.pre) {
+        this.last = now.pre;
+        this.last.next = null;
+    }
+    now.pre = null;
+};
+/** 
+ * Your LRUCache object will be instantiated and called as such:
+ * var obj = Object.create(LRUCache).createNew(capacity)
+ * var param_1 = obj.get(key)
+ * obj.put(key,value)
+ */
